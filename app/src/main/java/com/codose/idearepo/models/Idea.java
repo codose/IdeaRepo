@@ -13,7 +13,6 @@ public class Idea {
 
     private String title;
 
-    private List<String> features;
 
     private String description;
 
@@ -22,15 +21,6 @@ public class Idea {
         this.description = description;
     }
 
-    public Idea(String title, String description, List<String> features) {
-        this.title = title;
-        this.features = features;
-        this.description = description;
-    }
-
-    public List<String> getFeatures() {
-        return features;
-    }
 
     public int getId() {
         return id;
@@ -44,6 +34,13 @@ public class Idea {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public String getDescription() {
         return description;

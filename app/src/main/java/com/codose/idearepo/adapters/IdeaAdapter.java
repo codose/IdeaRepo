@@ -26,12 +26,19 @@ public class IdeaAdapter extends RecyclerView.Adapter<IdeaAdapter.IdeaHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull IdeaHolder holder, int position) {
-
+        Idea currentIdea = ideas.get(position);
+        holder.title.setText(currentIdea.getTitle());
+        holder.title.setText(currentIdea.getDescription());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return ideas.size();
+    }
+
+    public void setIdeas(List<Idea> ideas){
+        this.ideas = ideas;
+        notifyDataSetChanged();
     }
 
     class IdeaHolder extends RecyclerView.ViewHolder{
