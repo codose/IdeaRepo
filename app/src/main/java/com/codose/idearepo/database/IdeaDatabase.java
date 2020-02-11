@@ -50,13 +50,6 @@ public abstract class IdeaDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            ArrayList<String> dummy = new ArrayList<>();
-            dummy.add("Feature 1");
-            dummy.add("Feature 1");
-            dummy.add("Feature 1");
-            ideaDao.insert(new Idea("My Idea","This is my idea" ));
-            ideaDao.insert(new Idea("My Idea","This is my idea" ));
-            ideaDao.insert(new Idea("My Idea","This is my idea" ));
             return null;
         }
     }

@@ -28,7 +28,7 @@ public class IdeaAdapter extends RecyclerView.Adapter<IdeaAdapter.IdeaHolder> {
     public void onBindViewHolder(@NonNull IdeaHolder holder, int position) {
         Idea currentIdea = ideas.get(position);
         holder.title.setText(currentIdea.getTitle());
-        holder.title.setText(currentIdea.getDescription());
+        holder.desc.setText(currentIdea.getDescription());
     }
 
     @Override
@@ -48,7 +48,7 @@ public class IdeaAdapter extends RecyclerView.Adapter<IdeaAdapter.IdeaHolder> {
         public IdeaHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.item_activity_main_title);
-            title = itemView.findViewById(R.id.item_activity_main_desc);
+            desc = itemView.findViewById(R.id.item_activity_main_desc);
         }
     }
 }
