@@ -15,15 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.codose.idearepo.R;
 import com.codose.idearepo.ViewModels.ArchiveViewModel;
+import com.codose.idearepo.ViewModels.IdeaViewModel;
 import com.codose.idearepo.models.Archive;
 import com.codose.idearepo.models.Idea;
-import com.codose.idearepo.ViewModels.IdeaViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class IdeaAdapter extends RecyclerView.Adapter<IdeaAdapter.IdeaHolder> {
-    private List<Idea> ideas = new ArrayList<>();
+public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.IdeaHolder> {
+    private List<Archive> archives = new ArrayList<>();
     private IdeaViewModel ideaViewModel;
     private ArchiveViewModel archiveViewModel;
     @NonNull
@@ -37,26 +37,19 @@ public class IdeaAdapter extends RecyclerView.Adapter<IdeaAdapter.IdeaHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final IdeaHolder holder, int position) {
-        final Idea currentIdea = ideas.get(position);
+        final Archive currentIdea = archives.get(position);
         String title = currentIdea.getTitle();
         String description = currentIdea.getDescription();
-        final Archive archive = new Archive(title, description);
         holder.title.setText(title);
         holder.desc.setText(description);
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ideaViewModel.delete(currentIdea);
-                holder.arc_del.setVisibility(View.GONE);
-                notifyDataSetChanged();
             }
         });
         holder.archive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ideaViewModel.delete(currentIdea);
-                archiveViewModel.insert(archive);
-                notifyDataSetChanged();
                 holder.arc_del.setVisibility(View.GONE);
             }
         });
@@ -77,11 +70,11 @@ public class IdeaAdapter extends RecyclerView.Adapter<IdeaAdapter.IdeaHolder> {
 
     @Override
     public int getItemCount() {
-        return ideas.size();
+        return archives.size();
     }
 
-    public void setIdeas(List<Idea> ideas){
-        this.ideas = ideas;
+    public void setArchives(List<Archive> archives){
+        this.archives = archives;
         notifyDataSetChanged();
     }
 

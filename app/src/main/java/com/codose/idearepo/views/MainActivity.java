@@ -6,40 +6,46 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.lifecycle.ViewModelStoreOwner;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codose.idearepo.R;
 import com.codose.idearepo.adapters.IdeaAdapter;
 import com.codose.idearepo.models.Idea;
-import com.codose.idearepo.models.IdeaViewModel;
+import com.codose.idearepo.ViewModels.IdeaViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int REQUEST = 1;
     private IdeaViewModel ideaViewModel;
+    private TextView page_title;
     private ImageView drawer_ctrl;
     private DrawerLayout drawerLayout;
     private ConstraintLayout content;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         drawerLayout = findViewById(R.id.drawer_layout);
+        page_title = findViewById(R.id.page_title);
+        navigationView = findViewById(R.id.navigation_view);
         content = findViewById(R.id.constraint_layout);
         FloatingActionButton addIdea = findViewById(R.id.activity_main_add_idea);
         drawer_ctrl = findViewById(R.id.activity_main_drawer_ctrl);
@@ -47,21 +53,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         addIdea.setOnClickListener(this);
         drawerSlide();
         RecyclerView recyclerView = findViewById(R.id.activity_main_recyclerview);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setHasFixedSize(true);
 
         final IdeaAdapter ideaAdapter = new IdeaAdapter();
         recyclerView.setAdapter(ideaAdapter);
 
         ideaViewModel = ViewModelProviders.of(this).get(IdeaViewModel.class);
-        ideaViewModel.getAllIdeas().observe(this, new Observer<List<Idea>>() {
-            @Override
-            public void onChanged(List<Idea> ideas) {
-                //Update Data
-                ideaAdapter.setIdeas(ideas);
-            }
-        });
-
+        //Update Data
+        ideaViewModel.getAllIdeas().observe(this, ideaAdapter::setIdeas);
+        navListeners();
     }
 
     private void drawerSlide() {
@@ -104,12 +105,56 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent i = new Intent(MainActivity.this, NewIdeaActivity.class);
                 startActivityForResult(i, REQUEST);
                 break;
-            default:
-
         }
     }
 
     private void openDrawer() {
         drawerLayout.openDrawer(GravityCompat.START);
+    }
+    private void hideDrawer() {
+        drawerLayout.closeDrawer(GravityCompat.START);
+    }
+
+
+    private void navListeners() {
+        navigationView.setCheckedItem(R.id.nav_home);
+        navigationView.bringToFront();
+        final String[] title = new String[1];
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+           MenuItem checkedItem = navigationView.getCheckedItem();
+           if (checkedItem != null && checkedItem.getItemId() == menuItem.getItemId()) return false;
+            Fragment fragment=null;
+            switch (menuItem.getItemId()) {
+                case R.id.nav_home:
+                    Intent i = new Intent(this, MainActivity.class);
+                    startActivity(i);
+                    finish();
+                    navigationView.setCheckedItem(R.id.nav_home);
+                    break;
+                case R.id.nav_archived:
+                    fragment = new ArchiveFragment();
+                    Toast.makeText(this, "Clicked", Toast.LENGTH_SHORT).show();
+                    Log.e("ARCHIVE", "Clicked");
+                    navigationView.setCheckedItem(R.id.nav_archived);
+                    title[0] = "Archived";
+                    break;
+                case R.id.nav_recycle_bin:
+
+                    break;
+
+            }
+
+            if(fragment !=null){
+                setUpFragment(fragment, title[0]);
+            }
+            hideDrawer();
+            return true;
+        });
+    }
+
+    private void setUpFragment(Fragment fragment, String title) {
+        page_title.setText(title);
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_container, fragment).commit();
+
     }
 }

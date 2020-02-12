@@ -1,4 +1,4 @@
-package com.codose.idearepo.models;
+package com.codose.idearepo.ViewModels;
 
 import android.app.Application;
 
@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.codose.idearepo.models.Idea;
 import com.codose.idearepo.repository.IdeaRepository;
 
 import java.util.List;
