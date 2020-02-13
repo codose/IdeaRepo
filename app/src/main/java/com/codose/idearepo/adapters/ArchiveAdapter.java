@@ -1,7 +1,10 @@
 package com.codose.idearepo.adapters;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,10 +29,11 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.IdeaHold
     private List<Archive> archives = new ArrayList<>();
     private IdeaViewModel ideaViewModel;
     private ArchiveViewModel archiveViewModel;
+    private View itemView;
     @NonNull
     @Override
     public IdeaHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-       View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_activity_main, parent,false);
+       itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_activity_main, parent,false);
        ideaViewModel = ViewModelProviders.of((FragmentActivity) parent.getContext()).get(IdeaViewModel.class);
        archiveViewModel = ViewModelProviders.of((FragmentActivity) parent.getContext()).get(ArchiveViewModel.class);
         return new IdeaHolder(itemView);
@@ -56,16 +60,43 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.IdeaHold
         holder.item_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                holder.arc_del.setVisibility(View.GONE);
+                revealShow(false, holder);
             }
         });
         holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                holder.arc_del.setVisibility(View.VISIBLE);
+                revealShow(true, holder);
                 return true;
             }
         });
+    }
+
+    private void revealShow(Boolean b, IdeaHolder holder) {
+
+        int cx = holder.arc_del.getWidth() / 2;
+        int cy = holder.arc_del.getHeight() / 2;
+
+        int endRadius = (int) Math.hypot(cx, cy);
+
+        if (b) {
+            Animator revealAnimator = ViewAnimationUtils.createCircularReveal(holder.arc_del, cx,cy, 0, endRadius);
+            holder.arc_del.setVisibility(View.VISIBLE);
+            revealAnimator.setDuration(700);
+            revealAnimator.start();
+        } else {
+            Animator anim =
+                    ViewAnimationUtils.createCircularReveal(holder.arc_del, cx, cy, endRadius, 0);
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    holder.arc_del.setVisibility(View.GONE);
+                }
+            });
+            anim.setDuration(700);
+            anim.start();
+        }
     }
 
     @Override

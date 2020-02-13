@@ -47,6 +47,7 @@
             android:id="@+id/activity_new_idea_edit_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:background="@drawable/edit_curves"
             android:padding="15dp"
             android:paddingStart="25dp" />

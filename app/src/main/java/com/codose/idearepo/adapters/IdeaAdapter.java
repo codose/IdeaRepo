@@ -1,12 +1,17 @@
 package com.codose.idearepo.adapters;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentActivity;
@@ -26,10 +31,11 @@ public class IdeaAdapter extends RecyclerView.Adapter<IdeaAdapter.IdeaHolder> {
     private List<Idea> ideas = new ArrayList<>();
     private IdeaViewModel ideaViewModel;
     private ArchiveViewModel archiveViewModel;
+    private View itemView;
     @NonNull
     @Override
     public IdeaHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-       View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_activity_main, parent,false);
+        itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_activity_main, parent,false);
        ideaViewModel = ViewModelProviders.of((FragmentActivity) parent.getContext()).get(IdeaViewModel.class);
        archiveViewModel = ViewModelProviders.of((FragmentActivity) parent.getContext()).get(ArchiveViewModel.class);
         return new IdeaHolder(itemView);
@@ -63,16 +69,52 @@ public class IdeaAdapter extends RecyclerView.Adapter<IdeaAdapter.IdeaHolder> {
         holder.item_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                holder.arc_del.setVisibility(View.GONE);
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                    revealShow(false, holder);
+                }else{
+                    holder.arc_del.setVisibility(View.GONE);
+                }
             }
         });
         holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                holder.arc_del.setVisibility(View.VISIBLE);
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                    revealShow(true, holder);
+                }else{
+                    holder.arc_del.setVisibility(View.VISIBLE);
+                }
+
                 return true;
             }
         });
+    }
+
+    private void revealShow(Boolean b, IdeaHolder holder) {
+        int cx = holder.arc_del.getWidth() / 2;
+        int cy = holder.arc_del.getHeight() / 2;
+
+        int endRadius = (int) Math.hypot(cx, cy);
+
+        if(b){
+            Animator revealAnimator = ViewAnimationUtils.createCircularReveal(holder.arc_del, cx,cy, 0, endRadius);
+            holder.arc_del.setVisibility(View.VISIBLE);
+            revealAnimator.setDuration(700);
+            revealAnimator.start();
+        } else {
+            Animator anim =
+                    ViewAnimationUtils.createCircularReveal(holder.arc_del, cx, cy, endRadius, 0);
+
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    holder.arc_del.setVisibility(View.GONE);
+                }
+            });
+            anim.setDuration(700);
+            anim.start();
+        }
     }
 
     @Override
@@ -84,6 +126,7 @@ public class IdeaAdapter extends RecyclerView.Adapter<IdeaAdapter.IdeaHolder> {
         this.ideas = ideas;
         notifyDataSetChanged();
     }
+
 
     class IdeaHolder extends RecyclerView.ViewHolder{
         private TextView title;
