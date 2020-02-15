@@ -45,33 +45,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/page_title">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/activity_main_recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="16dp"
-                android:layout_marginTop="28dp"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                tools:listitem="@layout/item_activity_main" />
-        </FrameLayout>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/activity_main_add_idea"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="32dp"
-            android:background="@color/colorPrimary"
-            android:clickable="true"
-            android:visibility="visible"
-            app:backgroundTint="@color/colorPrimary"
-            app:fabSize="normal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:rippleColor="@color/colorAccent"
-            app:srcCompat="@drawable/ic_add" />
+            app:layout_constraintTop_toBottomOf="@+id/page_title"/>
 
         <ImageView
             android:id="@+id/activity_main_drawer_ctrl"

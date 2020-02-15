@@ -13,20 +13,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.codose.idearepo.R;
-import com.codose.idearepo.ViewModels.ArchiveViewModel;
-import com.codose.idearepo.adapters.ArchiveAdapter;
+import com.codose.idearepo.ViewModels.RecycleViewModel;
+import com.codose.idearepo.adapters.RecycleAdapter;
+
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ArchiveFragment extends Fragment {
-
-    private ArchiveViewModel archiveViewModel;
+public class RecycleBinFragment extends Fragment {
+    private RecycleViewModel recycleViewModel;
     private RecyclerView recyclerView;
     private View view;
     private Button button;
-
-    public ArchiveFragment() {
+    public RecycleBinFragment() {
         // Required empty public constructor
     }
 
@@ -35,24 +35,22 @@ public class ArchiveFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_container, container, false);
-        // Inflate the layout for this fragment
-        archiveViewModel = ViewModelProviders.of(getActivity()).get(ArchiveViewModel.class);
+        recycleViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(RecycleViewModel.class);
         initViews();
-
-
         return view;
     }
 
     private void initViews() {
         button = view.findViewById(R.id.fragment_button);
+        button.setText("Delete All");
         button.setOnClickListener(view -> {
-
+            recycleViewModel.deleteAllRecycled();
         });
         recyclerView = view.findViewById(R.id.fragment_recyclerview);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setHasFixedSize(true);
-        final ArchiveAdapter archiveAdapter = new ArchiveAdapter();
-        recyclerView.setAdapter(archiveAdapter);
-        archiveViewModel.getAllArchives().observe(getActivity(), archives -> archiveAdapter.setArchives(archives));
+        final RecycleAdapter recycleAdapter = new RecycleAdapter();
+        recyclerView.setAdapter(recycleAdapter);
+        recycleViewModel.getAllRecycled().observe(Objects.requireNonNull(getActivity()), recycleAdapter::setRecycleBins);
     }
 }

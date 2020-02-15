@@ -9,21 +9,21 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.codose.idearepo.models.Idea;
-import com.codose.idearepo.models.IdeaDao;
 
+import com.codose.idearepo.models.RecycleBin;
+import com.codose.idearepo.models.RecycleDao;
 
-@Database(entities = {Idea.class}, version = 1)
-public abstract class IdeaDatabase extends RoomDatabase {
+@Database(entities = {RecycleBin.class}, version = 1)
+public abstract class RecycleDatabase extends RoomDatabase {
 
-    private static IdeaDatabase instance;
+    private static RecycleDatabase instance;
 
-    public abstract IdeaDao ideaDao();
+    public abstract RecycleDao recycleDao();
 
-    public static synchronized IdeaDatabase getInstance(Context context){
+    public static synchronized RecycleDatabase getInstance(Context context){
         if (instance == null){
             instance = Room.databaseBuilder(context.getApplicationContext(),
-                    IdeaDatabase.class, "idea_database")
+                    RecycleDatabase.class, "recycled_database")
                     .fallbackToDestructiveMigration()
                     .addCallback(roomCallback)
                     .build();
@@ -31,7 +31,7 @@ public abstract class IdeaDatabase extends RoomDatabase {
         return instance;
     }
 
-    private static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback(){
+    private static Callback roomCallback = new Callback(){
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
@@ -41,10 +41,10 @@ public abstract class IdeaDatabase extends RoomDatabase {
     };
 
     private static class PopulateAsyncTask extends AsyncTask<Void, Void, Void> {
-        private IdeaDao ideaDao;
+        private RecycleDao recycleDao;
 
-        private PopulateAsyncTask(IdeaDatabase db){
-            ideaDao = db.ideaDao();
+        private PopulateAsyncTask(RecycleDatabase db){
+            recycleDao = db.recycleDao();
         }
 
         @Override

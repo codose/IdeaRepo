@@ -31,9 +31,9 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
+import static com.codose.idearepo.views.HomeFragment.REQUEST;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    public static final int REQUEST = 1;
-    private IdeaViewModel ideaViewModel;
     private TextView page_title;
     private ImageView drawer_ctrl;
     private DrawerLayout drawerLayout;
@@ -44,27 +44,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initViews();
+        drawerSlide();
+        navListeners();
+    }
+
+    private void initViews() {
         drawerLayout = findViewById(R.id.drawer_layout);
         page_title = findViewById(R.id.page_title);
         navigationView = findViewById(R.id.navigation_view);
         content = findViewById(R.id.constraint_layout);
-        FloatingActionButton addIdea = findViewById(R.id.activity_main_add_idea);
         drawer_ctrl = findViewById(R.id.activity_main_drawer_ctrl);
         drawer_ctrl.setOnClickListener(this);
-        addIdea.setOnClickListener(this);
-        drawerSlide();
-        RecyclerView recyclerView = findViewById(R.id.activity_main_recyclerview);
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        recyclerView.setHasFixedSize(true);
-
-        final IdeaAdapter ideaAdapter = new IdeaAdapter();
-        recyclerView.setAdapter(ideaAdapter);
-
-        ideaViewModel = ViewModelProviders.of(this).get(IdeaViewModel.class);
-        //Update Data
-        ideaViewModel.getAllIdeas().observe(this, ideaAdapter::setIdeas);
-        navListeners();
+        Fragment fragment = new HomeFragment();
+        setUpFragment(fragment, "My Ideas");
     }
+
 
     private void drawerSlide() {
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close) {
@@ -83,29 +78,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == REQUEST && resultCode == RESULT_OK){
-            String title = data.getStringExtra(NewIdeaActivity.EDIT_TITLE);
-            String desc = data.getStringExtra(NewIdeaActivity.EDIT_DESCRIPTION);
-
-            Idea idea = new Idea(title,desc);
-            ideaViewModel.insert(idea);
-        }
-    }
 
     @Override
     public void onClick(View view) {
-        switch(view.getId()){
-            case R.id.activity_main_drawer_ctrl:
-                openDrawer();
-                break;
-            case R.id.activity_main_add_idea :
-                Intent i = new Intent(MainActivity.this, NewIdeaActivity.class);
-                startActivityForResult(i, REQUEST);
-                break;
+        if (view.getId() == R.id.activity_main_drawer_ctrl) {
+            openDrawer();
         }
     }
 
@@ -127,20 +104,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Fragment fragment=null;
             switch (menuItem.getItemId()) {
                 case R.id.nav_home:
-                    Intent i = new Intent(this, MainActivity.class);
-                    startActivity(i);
-                    finish();
+                    fragment = new HomeFragment();
+                    navigationView.setCheckedItem(R.id.nav_archived);
+                    title[0] = "My Ideas";
                     navigationView.setCheckedItem(R.id.nav_home);
                     break;
                 case R.id.nav_archived:
                     fragment = new ArchiveFragment();
-                    Toast.makeText(this, "Clicked", Toast.LENGTH_SHORT).show();
-                    Log.e("ARCHIVE", "Clicked");
                     navigationView.setCheckedItem(R.id.nav_archived);
                     title[0] = "Archived";
                     break;
                 case R.id.nav_recycle_bin:
-
+                    fragment = new RecycleBinFragment();
+                    navigationView.setCheckedItem(R.id.nav_recycle_bin);
+                    title[0] = "Recycle Bin";
                     break;
 
             }
@@ -156,6 +133,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setUpFragment(Fragment fragment, String title) {
         page_title.setText(title);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_container, fragment).commit();
-
     }
 }

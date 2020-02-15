@@ -2,7 +2,7 @@ package com.codose.idearepo.adapters;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.os.Build;
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -18,20 +18,17 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.codose.idearepo.R;
-import com.codose.idearepo.ViewModels.ArchiveViewModel;
-import com.codose.idearepo.ViewModels.RecycleViewModel;
-import com.codose.idearepo.models.Archive;
-import com.codose.idearepo.models.Idea;
 import com.codose.idearepo.ViewModels.IdeaViewModel;
+import com.codose.idearepo.ViewModels.RecycleViewModel;
+import com.codose.idearepo.models.Idea;
 import com.codose.idearepo.models.RecycleBin;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class IdeaAdapter extends RecyclerView.Adapter<IdeaAdapter.IdeaHolder> {
-    private List<Idea> ideas = new ArrayList<>();
+public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.IdeaHolder> {
+    private List<RecycleBin> recycleBins = new ArrayList<>();
     private IdeaViewModel ideaViewModel;
-    private ArchiveViewModel archiveViewModel;
     private RecycleViewModel recycleViewModel;
 
     @NonNull
@@ -40,61 +37,46 @@ public class IdeaAdapter extends RecyclerView.Adapter<IdeaAdapter.IdeaHolder> {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_activity_main, parent, false);
        ideaViewModel = ViewModelProviders.of((FragmentActivity) parent.getContext()).get(IdeaViewModel.class);
        recycleViewModel = ViewModelProviders.of((FragmentActivity) parent.getContext()).get(RecycleViewModel.class);
-       archiveViewModel = ViewModelProviders.of((FragmentActivity) parent.getContext()).get(ArchiveViewModel.class);
         return new IdeaHolder(itemView);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull final IdeaHolder holder, int position) {
-        final Idea currentIdea = ideas.get(position);
+        final RecycleBin currentIdea = recycleBins.get(position);
         String title = currentIdea.getTitle();
         String description = currentIdea.getDescription();
-        final Archive archive = new Archive(title, description);
-        final RecycleBin recycleBin = new RecycleBin(title, description);
+        Idea idea = new Idea(title, description);
         holder.title.setText(title);
         holder.desc.setText(description);
+        holder.option1.setText("Restore");
+        holder.option2.setText("Delete");
         holder.delete.setOnClickListener(view -> {
-            ideaViewModel.delete(currentIdea);
-            recycleViewModel.insert(recycleBin);
+            recycleViewModel.delete(currentIdea);
             holder.arc_del.setVisibility(View.GONE);
-            notifyDataSetChanged();
         });
         holder.archive.setOnClickListener(view -> {
-            ideaViewModel.delete(currentIdea);
-            archiveViewModel.insert(archive);
-            notifyDataSetChanged();
+            recycleViewModel.delete(currentIdea);
+            ideaViewModel.insert(idea);
             holder.arc_del.setVisibility(View.GONE);
         });
-        holder.item_cancel.setOnClickListener(view -> {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                revealShow(false, holder);
-            }else{
-                holder.arc_del.setVisibility(View.GONE);
-            }
-        });
-        holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                    revealShow(true, holder);
-                }else{
-                    holder.arc_del.setVisibility(View.VISIBLE);
-                }
-
-                return true;
-            }
+        holder.item_cancel.setOnClickListener(view -> revealShow(false, holder));
+        holder.cardView.setOnLongClickListener(view -> {
+            revealShow(true, holder);
+            return true;
         });
     }
 
     private void revealShow(Boolean b, IdeaHolder holder) {
+
         int cx = holder.arc_del.getWidth() / 2;
         int cy = holder.arc_del.getHeight() / 2;
 
         int endRadius = (int) Math.hypot(cx, cy);
-
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             if (b) {
-                Animator revealAnimator = ViewAnimationUtils.createCircularReveal(holder.arc_del, cx, cy, 0, endRadius);
+                Animator revealAnimator = null;
+                    revealAnimator = ViewAnimationUtils.createCircularReveal(holder.arc_del, cx,cy, 0, endRadius);
                 holder.arc_del.setVisibility(View.VISIBLE);
                 revealAnimator.setDuration(700);
                 revealAnimator.start();
@@ -112,29 +94,27 @@ public class IdeaAdapter extends RecyclerView.Adapter<IdeaAdapter.IdeaHolder> {
                 anim.start();
             }
         }
+
     }
 
     @Override
     public int getItemCount() {
-        return ideas.size();
+        return recycleBins.size();
     }
 
-    public void setIdeas(List<Idea> ideas){
-        this.ideas = ideas;
+    public void setRecycleBins(List<RecycleBin> recycleBins){
+        this.recycleBins = recycleBins;
         notifyDataSetChanged();
     }
 
-
     class IdeaHolder extends RecyclerView.ViewHolder{
-        private TextView title;
-        private TextView desc;
+        private TextView title, desc, option1, option2;
         private ConstraintLayout arc_del;
         private CardView cardView;
         private ImageView item_cancel, archive, delete;
 
         public IdeaHolder(@NonNull View itemView) {
             super(itemView);
-
             title = itemView.findViewById(R.id.item_activity_main_title);
             desc = itemView.findViewById(R.id.item_activity_main_desc);
             arc_del = itemView.findViewById(R.id.item_archive_delete);
@@ -142,6 +122,8 @@ public class IdeaAdapter extends RecyclerView.Adapter<IdeaAdapter.IdeaHolder> {
             item_cancel = itemView.findViewById(R.id.item_cancel);
             archive = itemView.findViewById(R.id.archive_item);
             delete = itemView.findViewById(R.id.recycle_item);
+            option1 = itemView.findViewById(R.id.option_1);
+            option2 = itemView.findViewById(R.id.option_2);
 
         }
     }

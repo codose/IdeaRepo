@@ -2,6 +2,7 @@ package com.codose.idearepo.adapters;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -19,8 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.codose.idearepo.R;
 import com.codose.idearepo.ViewModels.ArchiveViewModel;
 import com.codose.idearepo.ViewModels.IdeaViewModel;
+import com.codose.idearepo.ViewModels.RecycleViewModel;
 import com.codose.idearepo.models.Archive;
 import com.codose.idearepo.models.Idea;
+import com.codose.idearepo.models.RecycleBin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.IdeaHold
     private List<Archive> archives = new ArrayList<>();
     private IdeaViewModel ideaViewModel;
     private ArchiveViewModel archiveViewModel;
+    private RecycleViewModel recycleViewModel;
     private View itemView;
     @NonNull
     @Override
@@ -36,39 +40,36 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.IdeaHold
        itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_activity_main, parent,false);
        ideaViewModel = ViewModelProviders.of((FragmentActivity) parent.getContext()).get(IdeaViewModel.class);
        archiveViewModel = ViewModelProviders.of((FragmentActivity) parent.getContext()).get(ArchiveViewModel.class);
+       recycleViewModel = ViewModelProviders.of((FragmentActivity) parent.getContext()).get(RecycleViewModel.class);
         return new IdeaHolder(itemView);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull final IdeaHolder holder, int position) {
         final Archive currentIdea = archives.get(position);
         String title = currentIdea.getTitle();
         String description = currentIdea.getDescription();
+        Idea idea = new Idea(title,description);
+        RecycleBin recycleBin = new RecycleBin(title,description);
         holder.title.setText(title);
         holder.desc.setText(description);
-        holder.delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            }
+        holder.option1.setText("Restore");
+        holder.option2.setText("Delete");
+        holder.delete.setOnClickListener(view -> {
+            archiveViewModel.delete(currentIdea);
+            recycleViewModel.insert(recycleBin);
+            holder.arc_del.setVisibility(View.GONE);
         });
-        holder.archive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                holder.arc_del.setVisibility(View.GONE);
-            }
+        holder.archive.setOnClickListener(view -> {
+            archiveViewModel.delete(currentIdea);
+            ideaViewModel.insert(idea);
+            holder.arc_del.setVisibility(View.GONE);
         });
-        holder.item_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                revealShow(false, holder);
-            }
-        });
-        holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                revealShow(true, holder);
-                return true;
-            }
+        holder.item_cancel.setOnClickListener(view -> revealShow(false, holder));
+        holder.cardView.setOnLongClickListener(view -> {
+            revealShow(true, holder);
+            return true;
         });
     }
 
@@ -78,24 +79,25 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.IdeaHold
         int cy = holder.arc_del.getHeight() / 2;
 
         int endRadius = (int) Math.hypot(cx, cy);
-
-        if (b) {
-            Animator revealAnimator = ViewAnimationUtils.createCircularReveal(holder.arc_del, cx,cy, 0, endRadius);
-            holder.arc_del.setVisibility(View.VISIBLE);
-            revealAnimator.setDuration(700);
-            revealAnimator.start();
-        } else {
-            Animator anim =
-                    ViewAnimationUtils.createCircularReveal(holder.arc_del, cx, cy, endRadius, 0);
-            anim.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                    holder.arc_del.setVisibility(View.GONE);
-                }
-            });
-            anim.setDuration(700);
-            anim.start();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            if (b) {
+                Animator revealAnimator = ViewAnimationUtils.createCircularReveal(holder.arc_del, cx, cy, 0, endRadius);
+                holder.arc_del.setVisibility(View.VISIBLE);
+                revealAnimator.setDuration(700);
+                revealAnimator.start();
+            } else {
+                Animator anim =
+                        ViewAnimationUtils.createCircularReveal(holder.arc_del, cx, cy, endRadius, 0);
+                anim.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        holder.arc_del.setVisibility(View.GONE);
+                    }
+                });
+                anim.setDuration(700);
+                anim.start();
+            }
         }
     }
 
@@ -110,8 +112,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.IdeaHold
     }
 
     class IdeaHolder extends RecyclerView.ViewHolder{
-        private TextView title;
-        private TextView desc;
+        private TextView title, desc, option1, option2;
         private ConstraintLayout arc_del;
         private CardView cardView;
         private ImageView item_cancel, archive, delete;
@@ -126,6 +127,8 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.IdeaHold
             item_cancel = itemView.findViewById(R.id.item_cancel);
             archive = itemView.findViewById(R.id.archive_item);
             delete = itemView.findViewById(R.id.recycle_item);
+            option1 = itemView.findViewById(R.id.option_1);
+            option2 = itemView.findViewById(R.id.option_2);
 
         }
     }
