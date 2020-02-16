@@ -38,12 +38,7 @@ public class NewIdeaActivity extends AppCompatActivity implements View.OnClickLi
         title = findViewById(R.id.activity_new_idea_edit_title);
         description = findViewById(R.id.activity_new_idea_edit_description);
         save_idea = findViewById(R.id.activity_new_idea_save_button);
-        save_idea.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveIdea();
-            }
-        });
+        save_idea.setOnClickListener(view -> saveIdea());
     }
 
 
@@ -73,10 +68,10 @@ public class NewIdeaActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.activity_new_idea_blue:
-                    setBackground(R.color.colorPrimary);
+                    setBackground(R.color.blue);
                     break;
                 case R.id.activity_new_idea_pink:
-                    setBackground(R.color.colorAccent);
+                    setBackground(R.color.pink);
                     break;
                 case R.id.activity_new_idea_yellow:
                     setBackground(R.color.yellow);

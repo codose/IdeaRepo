@@ -54,4 +54,8 @@ dependencies {
 
     //Material
     implementation 'com.android.support:design:29.0.0'
+
+    //prefs
+    implementation 'com.pixplicity.easyprefs:library:1.9.0'
+
 }
