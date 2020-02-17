@@ -9,6 +9,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import android.content.ContextWrapper;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,11 +29,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DrawerLayout drawerLayout;
     private ConstraintLayout content;
     private NavigationView navigationView;
-
+    private boolean dark;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         initPrefLib();
-        boolean dark = Prefs.getBoolean(DARK_MODE, false);
+        dark = Prefs.getBoolean(DARK_MODE, false);
         if(dark){
             setTheme(R.style.DarkAppTheme);
         }
@@ -46,6 +48,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         drawerLayout = findViewById(R.id.drawer_layout);
         page_title = findViewById(R.id.page_title);
         navigationView = findViewById(R.id.navigation_view);
+        if(dark){
+            navigationView.setBackgroundColor(getResources().getColor(R.color.black));
+        }
         content = findViewById(R.id.constraint_layout);
         drawer_ctrl = findViewById(R.id.activity_main_drawer_ctrl);
         drawer_ctrl.setOnClickListener(this);

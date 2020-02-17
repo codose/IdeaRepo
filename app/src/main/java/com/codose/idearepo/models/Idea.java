@@ -20,7 +20,9 @@ public class Idea {
         this.title = title;
         this.description = description;
     }
+    public Idea() {
 
+    }
 
     public int getId() {
         return id;

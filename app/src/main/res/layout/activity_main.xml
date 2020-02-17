@@ -7,18 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".views.MainActivity">
 
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navigation_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@color/black"
-        android:fitsSystemWindows="false"
-        android:paddingTop="45dp"
-        app:itemIconTint="@color/white"
-        app:itemTextAppearance="@style/poppinsTextViewStyle"
-        app:menu="@menu/nav_menu_items" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint_layout"
         android:layout_width="match_parent"
@@ -59,4 +47,13 @@
             app:srcCompat="@drawable/ic_baseline_menu_24" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        android:paddingTop="45dp"
+        app:menu="@menu/nav_menu_items" />
 </androidx.drawerlayout.widget.DrawerLayout>
