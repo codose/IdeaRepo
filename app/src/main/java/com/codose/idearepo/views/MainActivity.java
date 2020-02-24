@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dark = Prefs.getBoolean(DARK_MODE, false);
         if(dark){
             setTheme(R.style.DarkAppTheme);
+        } else{
+            setTheme(R.style.mAppTheme);
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);

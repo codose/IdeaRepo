@@ -23,12 +23,16 @@ import com.codose.idearepo.adapters.IdeaAdapter;
 import com.codose.idearepo.models.Idea;
 
 import static android.app.Activity.RESULT_OK;
+import static com.codose.idearepo.views.NewIdeaActivity.EDIT_DESCRIPTION;
+import static com.codose.idearepo.views.NewIdeaActivity.EDIT_ID;
+import static com.codose.idearepo.views.NewIdeaActivity.EDIT_TITLE;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment {
     public static final int REQUEST = 1;
+    public static final int EDIT_REQUEST = 2;
     private RecyclerView recyclerView;
     private IdeaViewModel ideaViewModel;
     private View view;
@@ -62,17 +66,31 @@ public class HomeFragment extends Fragment {
         final IdeaAdapter ideaAdapter = new IdeaAdapter();
         recyclerView.setAdapter(ideaAdapter);
         ideaViewModel.getAllIdeas().observe(getActivity(), ideaAdapter::setIdeas);
+
+        ideaAdapter.setOnIdeaClickListener(idea -> {
+            Intent intent = new Intent(getContext(),IdeaActivity.class);
+            intent.putExtra(EDIT_TITLE,idea.getTitle());
+            intent.putExtra(EDIT_DESCRIPTION,idea.getDescription());
+            intent.putExtra(EDIT_ID,idea.getId());
+            startActivity(intent);
+        });
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if(requestCode == REQUEST && resultCode == RESULT_OK){
-            String title = data.getStringExtra(NewIdeaActivity.EDIT_TITLE);
+            String title = data.getStringExtra(EDIT_TITLE);
             String desc = data.getStringExtra(NewIdeaActivity.EDIT_DESCRIPTION);
             Idea idea = new Idea(title,desc);
             ideaViewModel.insert(idea);
+        } else if(requestCode == EDIT_REQUEST && resultCode == RESULT_OK){
+            String title = data.getStringExtra(EDIT_TITLE);
+            String desc = data.getStringExtra(EDIT_DESCRIPTION);
+            int id = data.getIntExtra(EDIT_ID, -1);
+            Idea idea = new Idea(title,desc);
+            idea.setId(id);
+            ideaViewModel.update(idea);
         }
     }
 }

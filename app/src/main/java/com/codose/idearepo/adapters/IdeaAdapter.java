@@ -33,6 +33,7 @@ public class IdeaAdapter extends RecyclerView.Adapter<IdeaAdapter.IdeaHolder> {
     private IdeaViewModel ideaViewModel;
     private ArchiveViewModel archiveViewModel;
     private RecycleViewModel recycleViewModel;
+    private OnIdeaClickListener listener;
 
     @NonNull
     @Override
@@ -143,6 +144,20 @@ public class IdeaAdapter extends RecyclerView.Adapter<IdeaAdapter.IdeaHolder> {
             archive = itemView.findViewById(R.id.archive_item);
             delete = itemView.findViewById(R.id.recycle_item);
 
+            itemView.setOnClickListener(view -> {
+                int position = getAdapterPosition();
+                if (listener != null && position != RecyclerView.NO_POSITION){
+                    listener.onIdeaClick(ideas.get(position));
+                }
+            });
+
         }
+    }
+
+    public interface OnIdeaClickListener{
+        void onIdeaClick(Idea idea);
+    }
+    public void setOnIdeaClickListener(OnIdeaClickListener listener){
+        this.listener = listener;
     }
 }

@@ -9,11 +9,13 @@
     tools:context=".views.NewIdeaActivity">
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/activity_new_idea_page_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
+        android:autoText="true"
+        android:background="@android:color/transparent"
         android:fontFamily="@font/poppins_bold"
         android:text="Add a new Idea"
         android:textSize="24sp"
@@ -26,9 +28,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView2"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/activity_new_idea_page_textview"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView2"
+        app:layout_constraintTop_toTopOf="@+id/activity_new_idea_page_textview"
         app:srcCompat="@drawable/ic_arrow_back_black_24dp"
         tools:ignore="VectorDrawableCompat" />
 
@@ -39,6 +42,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
+        android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3">
@@ -48,6 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edit_curves"
+            android:editable="true"
             android:padding="15dp"
             android:paddingStart="25dp"
             android:singleLine="true" />
@@ -130,11 +135,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
         android:fontFamily="@font/poppins"
         android:text="Title"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/textInputLayout"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_new_idea_page_textview" />
 
     <TextView
         android:id="@+id/textView4"
