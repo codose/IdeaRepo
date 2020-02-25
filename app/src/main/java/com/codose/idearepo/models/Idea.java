@@ -10,15 +10,16 @@ import java.util.List;
 public class Idea {
     @PrimaryKey(autoGenerate = true)
     private int id;
+    private String colorId;
 
     private String title;
 
-
     private String description;
 
-    public Idea(String title, String description) {
+    public Idea(String title, String description, String colorId) {
         this.title = title;
         this.description = description;
+        this.colorId = colorId;
     }
     public Idea() {
 
@@ -46,5 +47,13 @@ public class Idea {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getColorId() {
+        return colorId;
+    }
+
+    public void setColorId(String colorId) {
+        this.colorId = colorId;
     }
 }

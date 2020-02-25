@@ -7,14 +7,17 @@ public class RecycleBin {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
+    private String colorId;
+
     private String title;
 
 
     private String description;
 
-    public RecycleBin(String title, String description) {
+    public RecycleBin(String title, String description, String colorId) {
         this.title = title;
         this.description = description;
+        this.colorId = colorId;
     }
 
 
@@ -40,5 +43,13 @@ public class RecycleBin {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getColorId() {
+        return colorId;
+    }
+
+    public void setColorId(String colorId) {
+        this.colorId = colorId;
     }
 }

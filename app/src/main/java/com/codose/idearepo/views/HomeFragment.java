@@ -23,6 +23,7 @@ import com.codose.idearepo.adapters.IdeaAdapter;
 import com.codose.idearepo.models.Idea;
 
 import static android.app.Activity.RESULT_OK;
+import static com.codose.idearepo.views.NewIdeaActivity.BG_COLOR;
 import static com.codose.idearepo.views.NewIdeaActivity.EDIT_DESCRIPTION;
 import static com.codose.idearepo.views.NewIdeaActivity.EDIT_ID;
 import static com.codose.idearepo.views.NewIdeaActivity.EDIT_TITLE;
@@ -71,6 +72,7 @@ public class HomeFragment extends Fragment {
             Intent intent = new Intent(getContext(),IdeaActivity.class);
             intent.putExtra(EDIT_TITLE,idea.getTitle());
             intent.putExtra(EDIT_DESCRIPTION,idea.getDescription());
+            intent.putExtra(BG_COLOR,idea.getColorId());
             intent.putExtra(EDIT_ID,idea.getId());
             startActivity(intent);
         });
@@ -82,13 +84,15 @@ public class HomeFragment extends Fragment {
         if(requestCode == REQUEST && resultCode == RESULT_OK){
             String title = data.getStringExtra(EDIT_TITLE);
             String desc = data.getStringExtra(NewIdeaActivity.EDIT_DESCRIPTION);
-            Idea idea = new Idea(title,desc);
+            String bgColor = data.getStringExtra(BG_COLOR);
+            Idea idea = new Idea(title,desc,bgColor);
             ideaViewModel.insert(idea);
         } else if(requestCode == EDIT_REQUEST && resultCode == RESULT_OK){
             String title = data.getStringExtra(EDIT_TITLE);
             String desc = data.getStringExtra(EDIT_DESCRIPTION);
+            String bgColor = data.getStringExtra(BG_COLOR);
             int id = data.getIntExtra(EDIT_ID, -1);
-            Idea idea = new Idea(title,desc);
+            Idea idea = new Idea(title,desc,bgColor);
             idea.setId(id);
             ideaViewModel.update(idea);
         }

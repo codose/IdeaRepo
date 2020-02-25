@@ -2,6 +2,7 @@ package com.codose.idearepo.adapters;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,6 +36,7 @@ public class IdeaAdapter extends RecyclerView.Adapter<IdeaAdapter.IdeaHolder> {
     private ArchiveViewModel archiveViewModel;
     private RecycleViewModel recycleViewModel;
     private OnIdeaClickListener listener;
+    public static final String DEFAULT_COLOR = "#FFF5A2";
 
     @NonNull
     @Override
@@ -50,10 +53,16 @@ public class IdeaAdapter extends RecyclerView.Adapter<IdeaAdapter.IdeaHolder> {
         final Idea currentIdea = ideas.get(position);
         String title = currentIdea.getTitle();
         String description = currentIdea.getDescription();
-        final Archive archive = new Archive(title, description);
-        final RecycleBin recycleBin = new RecycleBin(title, description);
+        String bgColor = currentIdea.getColorId();
+        final Archive archive = new Archive(title, description, bgColor);
+        final RecycleBin recycleBin = new RecycleBin(title, description, bgColor);
         holder.title.setText(title);
         holder.desc.setText(description);
+        if(bgColor == null){
+            holder.cardView.setCardBackgroundColor(Color.parseColor(DEFAULT_COLOR));
+        } else{
+            holder.cardView.setCardBackgroundColor(Color.parseColor(bgColor));
+        }
         holder.delete.setOnClickListener(view -> {
             ideaViewModel.delete(currentIdea);
             recycleViewModel.insert(recycleBin);
@@ -73,17 +82,14 @@ public class IdeaAdapter extends RecyclerView.Adapter<IdeaAdapter.IdeaHolder> {
                 holder.arc_del.setVisibility(View.GONE);
             }
         });
-        holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                    revealShow(true, holder);
-                }else{
-                    holder.arc_del.setVisibility(View.VISIBLE);
-                }
-
-                return true;
+        holder.cardView.setOnLongClickListener(view -> {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                revealShow(true, holder);
+            }else{
+                holder.arc_del.setVisibility(View.VISIBLE);
             }
+
+            return true;
         });
     }
 
@@ -144,7 +150,7 @@ public class IdeaAdapter extends RecyclerView.Adapter<IdeaAdapter.IdeaHolder> {
             archive = itemView.findViewById(R.id.archive_item);
             delete = itemView.findViewById(R.id.recycle_item);
 
-            itemView.setOnClickListener(view -> {
+            cardView.setOnClickListener(view -> {
                 int position = getAdapterPosition();
                 if (listener != null && position != RecyclerView.NO_POSITION){
                     listener.onIdeaClick(ideas.get(position));

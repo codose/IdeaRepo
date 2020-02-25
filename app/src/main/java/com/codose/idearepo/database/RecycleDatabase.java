@@ -13,7 +13,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.codose.idearepo.models.RecycleBin;
 import com.codose.idearepo.models.RecycleDao;
 
-@Database(entities = {RecycleBin.class}, version = 1)
+@Database(entities = {RecycleBin.class}, version = 2)
 public abstract class RecycleDatabase extends RoomDatabase {
 
     private static RecycleDatabase instance;

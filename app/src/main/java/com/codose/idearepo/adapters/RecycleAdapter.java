@@ -46,7 +46,8 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.IdeaHold
         final RecycleBin currentIdea = recycleBins.get(position);
         String title = currentIdea.getTitle();
         String description = currentIdea.getDescription();
-        Idea idea = new Idea(title, description);
+        String bgColor = currentIdea.getColorId();
+        Idea idea = new Idea(title, description, bgColor);
         holder.title.setText(title);
         holder.desc.setText(description);
         holder.option1.setText("Restore");

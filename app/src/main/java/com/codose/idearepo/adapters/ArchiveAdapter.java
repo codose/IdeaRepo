@@ -50,8 +50,9 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.IdeaHold
         final Archive currentIdea = archives.get(position);
         String title = currentIdea.getTitle();
         String description = currentIdea.getDescription();
-        Idea idea = new Idea(title,description);
-        RecycleBin recycleBin = new RecycleBin(title,description);
+        String bgColor = currentIdea.getColorId();
+        Idea idea = new Idea(title,description, bgColor);
+        RecycleBin recycleBin = new RecycleBin(title,description, bgColor);
         holder.title.setText(title);
         holder.desc.setText(description);
         holder.option1.setText("Restore");

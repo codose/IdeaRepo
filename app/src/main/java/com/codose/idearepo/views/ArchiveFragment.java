@@ -62,7 +62,8 @@ public class ArchiveFragment extends Fragment {
             for (int i = 0 ; i<archives.size();i++){
                 String title = archives.get(i).getTitle();
                 String desc = archives.get(i).getDescription();
-                Idea idea = new Idea(title, desc);
+                String bgColor = archives.get(i).getColorId();
+                Idea idea = new Idea(title, desc, bgColor);
                 ideaViewModel.insert(idea);
             }
             archiveViewModel.deleteAllArchives();

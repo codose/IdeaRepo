@@ -13,7 +13,7 @@ import com.codose.idearepo.models.Idea;
 import com.codose.idearepo.models.IdeaDao;
 
 
-@Database(entities = {Idea.class}, version = 1)
+@Database(entities = {Idea.class}, version = 2)
 public abstract class IdeaDatabase extends RoomDatabase {
 
     private static IdeaDatabase instance;

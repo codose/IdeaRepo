@@ -14,7 +14,7 @@ import com.codose.idearepo.models.ArchiveDao;
 import com.codose.idearepo.models.Idea;
 import com.codose.idearepo.models.IdeaDao;
 
-@Database(entities = {Archive.class}, version = 1)
+@Database(entities = {Archive.class}, version = 2)
 public abstract class ArchiveDatabase extends RoomDatabase {
 
     private static ArchiveDatabase instance;
