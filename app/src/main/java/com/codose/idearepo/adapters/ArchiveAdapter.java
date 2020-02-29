@@ -3,6 +3,7 @@ package com.codose.idearepo.adapters;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -27,6 +28,8 @@ import com.codose.idearepo.models.RecycleBin;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.codose.idearepo.adapters.IdeaAdapter.DEFAULT_COLOR;
 
 public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.IdeaHolder> {
     private List<Archive> archives = new ArrayList<>();
@@ -57,6 +60,11 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.IdeaHold
         holder.desc.setText(description);
         holder.option1.setText("Restore");
         holder.option2.setText("Delete");
+        if(bgColor == null){
+            holder.cardView.setCardBackgroundColor(Color.parseColor(DEFAULT_COLOR));
+        } else{
+            holder.cardView.setCardBackgroundColor(Color.parseColor(bgColor));
+        }
         holder.delete.setOnClickListener(view -> {
             archiveViewModel.delete(currentIdea);
             recycleViewModel.insert(recycleBin);

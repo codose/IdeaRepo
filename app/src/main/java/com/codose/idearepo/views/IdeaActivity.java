@@ -35,6 +35,7 @@ public class IdeaActivity extends AppCompatActivity {
     private FloatingActionButton editIdea;
     private IdeaViewModel ideaViewModel;
     private ScrollView scrollView;
+    private String ideaTitle, ideaDescription, bgColor;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,9 +45,7 @@ public class IdeaActivity extends AppCompatActivity {
         scrollView = findViewById(R.id.scrollView_layout);
         description = findViewById(R.id.fragment_idea_description);
         editIdea = findViewById(R.id.fragment_idea_edit_fab);
-        String ideaTitle = getIntent().getStringExtra(EDIT_TITLE);
-        String ideaDescription = getIntent().getStringExtra(EDIT_DESCRIPTION);
-        String bgColor = getIntent().getStringExtra(BG_COLOR);
+        setExtras();
         int ideaId = getIntent().getIntExtra(EDIT_ID,0);
 
         title.setText(ideaTitle);
@@ -64,6 +63,13 @@ public class IdeaActivity extends AppCompatActivity {
 
     }
 
+    private void setExtras() {
+        ideaTitle = getIntent().getStringExtra(EDIT_TITLE);
+        ideaDescription = getIntent().getStringExtra(EDIT_DESCRIPTION);
+        bgColor = getIntent().getStringExtra(BG_COLOR);
+    }
+
+
     private void setBackground(String bgColor) {
         if(bgColor == null){
             scrollView.setBackgroundColor(Color.parseColor(DEFAULT_COLOR));
@@ -78,14 +84,14 @@ public class IdeaActivity extends AppCompatActivity {
 
         if(requestCode == EDIT_REQUEST && resultCode == RESULT_OK){
 
-            String ideaTitle = data.getStringExtra(EDIT_TITLE);
-            String desc = data.getStringExtra(EDIT_DESCRIPTION);
-            String bgColor = data.getStringExtra(BG_COLOR);
+            ideaTitle = data.getStringExtra(EDIT_TITLE);
+            ideaDescription = data.getStringExtra(EDIT_DESCRIPTION);
+            bgColor = data.getStringExtra(BG_COLOR);
             title.setText(ideaTitle);
-            description.setText(desc);
+            description.setText(ideaDescription);
             setBackground(bgColor);
             int id = data.getIntExtra(EDIT_ID, -1);
-            Idea idea = new Idea(ideaTitle,desc,bgColor);
+            Idea idea = new Idea(ideaTitle,ideaDescription,bgColor);
             idea.setId(id);
             ideaViewModel.update(idea);
         }

@@ -23,22 +23,17 @@ import com.pixplicity.easyprefs.library.Prefs;
 
 import static com.codose.idearepo.views.SettingsFragment.DARK_MODE;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
     private TextView page_title;
     private ImageView drawer_ctrl;
     private DrawerLayout drawerLayout;
     private ConstraintLayout content;
     private NavigationView navigationView;
     private boolean dark;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        initPrefLib();
-        dark = Prefs.getBoolean(DARK_MODE, false);
-        if(dark){
-            setTheme(R.style.DarkAppTheme);
-        } else{
-            setTheme(R.style.mAppTheme);
-        }
+        setAppTheme();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
@@ -50,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         drawerLayout = findViewById(R.id.drawer_layout);
         page_title = findViewById(R.id.page_title);
         navigationView = findViewById(R.id.navigation_view);
+        dark = Prefs.getBoolean(DARK_MODE, false);
         if(dark){
             navigationView.setBackgroundColor(getResources().getColor(R.color.black));
         }
@@ -138,14 +134,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setUpFragment(Fragment fragment, String title) {
         page_title.setText(title);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_container, fragment).commit();
-    }
-
-    private void initPrefLib() {
-        new Prefs.Builder()
-                .setContext(this)
-                .setMode(ContextWrapper.MODE_PRIVATE)
-                .setPrefsName(getPackageName())
-                .setUseDefaultSharedPreference(true)
-                .build();
     }
 }
