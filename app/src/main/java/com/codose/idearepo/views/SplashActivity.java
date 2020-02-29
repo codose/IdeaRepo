@@ -15,7 +15,7 @@ import com.pixplicity.easyprefs.library.Prefs;
 import static com.codose.idearepo.views.SettingsFragment.DARK_MODE;
 
 public class SplashActivity extends BaseActivity {
-
+    private boolean ignoreHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         initPrefLib();
@@ -34,9 +34,16 @@ public class SplashActivity extends BaseActivity {
 
     private void navigateTo() {
         new Handler().postDelayed(() -> {
-                Intent main = new Intent(getApplicationContext(), MainActivity.class);
+            if(ignoreHandler) return;
+            Intent main = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(main);
                 finish();
         }, 3000);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ignoreHandler = true;
     }
 }
